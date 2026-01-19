@@ -23,6 +23,7 @@ COPY requirements.txt .
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         gcc \
+        curl \
         tzdata \
         chromium chromium-driver \
         dbus dbus-x11 \
@@ -49,6 +50,13 @@ RUN mkdir -p ./data
 
 # 声明数据卷
 VOLUME ["/app/data"]
+
+# 声明端口
+EXPOSE 7860
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:7860/admin/health || exit 1
 
 # 启动服务
 CMD ["python", "-u", "main.py"]

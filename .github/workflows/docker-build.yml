@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: CooooooKK/gemini-business2api
+          images: ${{ github.repository_owner }}/gemini-business2api
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -49,3 +49,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # 优化构建参数
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+          provenance: false
