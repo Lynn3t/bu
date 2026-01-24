@@ -50,6 +50,7 @@ class BasicConfig(BaseModel):
     duckmail_base_url: str = Field(default="https://api.duckmail.sbs", description="DuckMail API地址")
     duckmail_api_key: str = Field(default="", description="DuckMail API key")
     duckmail_verify_ssl: bool = Field(default=True, description="DuckMail SSL校验")
+    gptmail_api_key: str = Field(default="", description="GPTMail API key")
     browser_engine: str = Field(default="dp", description="浏览器引擎：uc 或 dp")
     browser_headless: bool = Field(default=False, description="自动化浏览器无头模式")
     refresh_window_hours: int = Field(default=1, ge=0, le=24, description="过期刷新窗口（小时）")
@@ -147,6 +148,7 @@ class ConfigManager:
         register_default_raw = basic_data.get("register_default_count", 1)
         register_domain_raw = basic_data.get("register_domain", "")
         duckmail_api_key_raw = basic_data.get("duckmail_api_key", "")
+        gptmail_api_key_raw = basic_data.get("gptmail_api_key") or os.getenv("GPTMAIL_API_KEY", "")
 
         # 兼容旧配置：如果存在旧的 proxy 字段，迁移到新字段
         old_proxy = basic_data.get("proxy", "")
@@ -176,6 +178,7 @@ class ConfigManager:
             duckmail_base_url=basic_data.get("duckmail_base_url") or "https://api.duckmail.sbs",
             duckmail_api_key=str(duckmail_api_key_raw or "").strip(),
             duckmail_verify_ssl=_parse_bool(basic_data.get("duckmail_verify_ssl"), True),
+            gptmail_api_key=str(gptmail_api_key_raw or "").strip(),
             browser_engine=basic_data.get("browser_engine") or "dp",
             browser_headless=_parse_bool(basic_data.get("browser_headless"), False),
             refresh_window_hours=int(refresh_window_raw),

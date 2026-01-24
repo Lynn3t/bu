@@ -126,6 +126,13 @@
                   class="w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm"
                   placeholder="dk_xxx"
                 />
+                <label class="block text-xs text-muted-foreground">GPTMail API 密钥</label>
+                <input
+                  v-model="localSettings.basic.gptmail_api_key"
+                  type="text"
+                  class="w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm"
+                  placeholder="gpt-test 或 您的 API Key"
+                />
               </div>
             </div>
 

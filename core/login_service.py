@@ -11,6 +11,7 @@ from core.account import load_accounts_from_source
 from core.base_task_service import BaseTask, BaseTaskService, TaskCancelledError, TaskStatus
 from core.config import config
 from core.duckmail_client import DuckMailClient
+from core.gptmail_client import GPTMailClient
 from core.gemini_automation import GeminiAutomation
 from core.gemini_automation_uc import GeminiAutomationUC
 from core.microsoft_mail_client import MicrosoftMailClient
@@ -185,6 +186,12 @@ class LoginService(BaseTaskService[LoginTask]):
                 log_callback=log_cb,
             )
             client.set_credentials(account_id, mail_password)
+        elif mail_provider == "gptmail":
+            client = GPTMailClient(
+                api_key=config.basic.gptmail_api_key,
+                log_callback=log_cb
+            )
+            client.email = account_id # GPTMailClient needs email set for polling
         else:
             return {"success": False, "email": account_id, "error": f"不支持的邮件提供商: {mail_provider}"}
 
@@ -269,6 +276,8 @@ class LoginService(BaseTaskService[LoginTask]):
             if mail_provider == "microsoft":
                 if not account.get("mail_client_id") or not account.get("mail_refresh_token"):
                     continue
+            elif mail_provider == "gptmail":
+                pass # Password not required for GPTMail
             else:
                 if not mail_password:
                     continue

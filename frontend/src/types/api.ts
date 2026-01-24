@@ -58,6 +58,7 @@ export interface Settings {
     duckmail_base_url?: string
     duckmail_api_key?: string
     duckmail_verify_ssl?: boolean
+    gptmail_api_key?: string
     browser_engine?: string
     browser_headless?: boolean
     refresh_window_hours?: number
